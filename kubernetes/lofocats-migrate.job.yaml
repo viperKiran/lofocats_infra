@@ -1,0 +1,47 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    app: lofocats
+    component: migrate
+  name: lofocats-migrate
+spec:
+  template:
+    metadata:
+      labels:
+        app: lofocats
+        component: migrate
+    spec:
+      containers:
+      - image: maxbrunet/lofocats_api:latest
+        name: lofocats-migrate
+        command: ["rake", "db:migrate"]
+        env:
+        - name: RAILS_ENV
+          value: production
+        envFrom:
+        - secretRef:
+            name: lofocats-api-database-url
+      - image: gcr.io/cloudsql-docker/gce-proxy:1.13
+        name: cloudsql-proxy
+        # Timeout proxy after 5min so the job exits 
+        command: ["timeout", "-t", "300", "./cloud_sql_proxy"]
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /secrets/cloudsql/credentials.json
+        envFrom:
+        - configMapRef:
+            name: lofocats-db-instances
+        securityContext:
+          runAsUser: 2  # non-root user
+          allowPrivilegeEscalation: false
+        volumeMounts:
+        - name: cloudsql-instance-credentials
+          mountPath: /secrets/cloudsql
+          readOnly: true
+      volumes:
+      - name: cloudsql-instance-credentials
+        secret:
+          secretName: lofocats-db-instance-credentials
+      restartPolicy: OnFailure

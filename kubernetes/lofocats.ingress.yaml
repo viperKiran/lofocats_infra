@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: lofocats
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: lofocats
+    #certmanager.k8s.io/issuer: letsencrypt-prod
+    #certmanager.k8s.io/acme-challenge-type: http01
+spec:
+  #tls:
+  #- hosts:
+  #  - lofocats.com
+  #  secretName: lofocats-com-tls
+  rules:
+  - http:
+      paths:
+      - path: /api/*
+        backend:
+          serviceName: lofocats-api
+          servicePort: 3001
+      - path: /*
+        backend:
+          serviceName: lofocats-ui
+          servicePort: 3000
+    #host: lofocats.com

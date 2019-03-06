@@ -1,0 +1,71 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kubernetes.io/change-cause: "Initial deployment"
+  labels:
+    app: lofocats
+    component: api
+  name: lofocats-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: lofocats
+      component: api
+  template:
+    metadata:
+      labels:
+        app: lofocats
+        component: api
+    spec:
+      containers:
+      - image: maxbrunet/lofocats_api:latest
+        name: lofocats-api
+        env:
+        - name: RAILS_ENV
+          value: production
+        envFrom:
+        - secretRef:
+            name: lofocats-api-database-url
+        - secretRef:
+            name: lofocats-api-secret-key
+        ports:
+        - containerPort: 3001
+        #resources:
+        #  limits:
+        #    cpu: 500m
+        #    memory: 512Mi
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 3001
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 3001
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      - image: gcr.io/cloudsql-docker/gce-proxy:1.13
+        name: cloudsql-proxy
+        command: ["./cloud_sql_proxy"]
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /secrets/cloudsql/credentials.json
+        envFrom:
+        - configMapRef:
+            name: lofocats-db-instances
+        securityContext:
+          runAsUser: 2  # non-root user
+          allowPrivilegeEscalation: false
+        volumeMounts:
+        - name: cloudsql-instance-credentials
+          mountPath: /secrets/cloudsql
+          readOnly: true
+      volumes:
+      - name: cloudsql-instance-credentials
+        secret:
+          secretName: lofocats-db-instance-credentials
