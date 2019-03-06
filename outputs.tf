@@ -10,12 +10,8 @@ output "endpoint" {
   value = "${module.endpoint-dns.endpoint}"
 }
 
-output "credentials_json" {
-  value = "${base64decode(google_service_account_key.db_client_key.private_key)}"
-}
-
-output "connection_name" {
-  value = "${google_sql_database_instance.primary.connection_name}"
+output "sql_ip_address" {
+  value = "${google_sql_database_instance.primary.first_ip_address}"
 }
 
 output "sql_password" {

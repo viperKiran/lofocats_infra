@@ -49,23 +49,3 @@ spec:
             port: 3001
           initialDelaySeconds: 5
           periodSeconds: 5
-      - image: gcr.io/cloudsql-docker/gce-proxy:1.13
-        name: cloudsql-proxy
-        command: ["./cloud_sql_proxy"]
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /secrets/cloudsql/credentials.json
-        envFrom:
-        - configMapRef:
-            name: lofocats-db-instances
-        securityContext:
-          runAsUser: 2  # non-root user
-          allowPrivilegeEscalation: false
-        volumeMounts:
-        - name: cloudsql-instance-credentials
-          mountPath: /secrets/cloudsql
-          readOnly: true
-      volumes:
-      - name: cloudsql-instance-credentials
-        secret:
-          secretName: lofocats-db-instance-credentials

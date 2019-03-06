@@ -2,28 +2,6 @@ resource "google_project_service" "sqladmin_api" {
   service = "sqladmin.googleapis.com"
 }
 
-resource "google_project_service" "iam_api" {
-  service = "iam.googleapis.com"
-}
-
-resource "google_service_account" "db_client" {
-  account_id   = "lofocats-db-client"
-  display_name = "lofocats-db-client"
-  depends_on   = ["google_project_service.iam_api"]
-}
-
-resource "google_project_iam_binding" "cloudsql_client" {
-  role = "roles/cloudsql.client"
-
-  members = [
-    "serviceAccount:${google_service_account.db_client.email}",
-  ]
-}
-
-resource "google_service_account_key" "db_client_key" {
-  service_account_id = "${google_service_account.db_client.name}"
-}
-
 resource "random_id" "db-name" {
   byte_length = 2
 }

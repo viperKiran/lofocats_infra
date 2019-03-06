@@ -24,24 +24,14 @@ create_secret_from_literal() {
      --from-literal="${literal}"
 }
 
-create_confimap_from_literal() {
-   local name="${1}"
-   local literal="${2}"
-
-   kubectl create configmap "${name}" \
-     --from-literal="${literal}"
-}
-
 main() {
+  local sql_ip_address
   local sql_password
-  local connection_name
-  local credentials_json
   local secret_key_base
   local secret_key
 
+  sql_ip_address="$(terraform output sql_ip_address)"
   sql_password="$(terraform output sql_password)"
-  connection_name="$(terraform output connection_name)"
-  credentials_json="$(terraform output credentials_json)"
 
   for secret_key in lofocats-api-secret-key lofocats-ui-secret-key; do
     secret_key_base="$(generate_random_string 130)"
@@ -50,11 +40,7 @@ main() {
   done
 
   create_secret_from_literal lofocats-api-database-url \
-    "DATABASE_URL=postgres://lofocats:${sql_password}@localhost/lofocats?pool=5&timeout=5000"
-  create_confimap_from_literal lofocats-db-instances \
-    "INSTANCES=${connection_name}=tcp:5432"
-  create_secret_from_literal lofocats-db-instance-credentials \
-    "credentials.json=${credentials_json}"
+    "DATABASE_URL=postgres://lofocats:${sql_password}@${sql_ip_address}/lofocats?pool=5&timeout=5000"
 }
 
 main

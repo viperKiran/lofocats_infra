@@ -33,7 +33,6 @@ A customer needs an infrastructure to run their new Web application composed of 
   * the necessary environment variables
   * [rolling updates](https://kubernetes.io/docs/tutorials/kubernetes-basics/update/update-intro/)
   * scale and maintain the expected number of running replicas (via a [ReplicaSet](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/) objects)
-* The API will talk the PostgreSQL service using a [CloudSQL-Proxy](https://cloud.google.com/sql/docs/postgres/sql-proxy) sidecar container which will provide connection management, SSL encryption and avoid creating firewall rules.
 * The UI and API will be accessible externally via HTTPS (with HTTP redirect), free TLS/SSL certificates will be provided by [Let's Encrypt](https://letsencrypt.org/) and managed automatically inside the K8s cluster by [cert-manager](https://github.com/jetstack/cert-manager)
 * The Kubernetes nodes and CloudSQL database will be created inside a [VPC](https://cloud.google.com/vpc/) and only have private IPs
 * The UI and API services will be exposed to the Internet via the GCE ingress controller since it is built-in and simple to use.
