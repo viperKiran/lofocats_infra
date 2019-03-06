@@ -1,4 +1,4 @@
-# lofocats_infra
+# LofoCats Infrastructure
 
 Simple example of creating an infrastructure for a customer app with Terraform and Kubernetes.
 
