@@ -10,8 +10,6 @@ scripts/initialize-gcp-project.sh
 echo '>>> Building infrastructure...'
 scripts/build-infrastructure.sh
 
-echo '>>> Waiting 60 seconds for the app to be running...'
-sleep 60
 echo '>>> Loading demo data...'
 scripts/load-demo-data.sh
 
