@@ -24,12 +24,22 @@ create_secret_from_literal() {
      --from-literal="${literal}"
 }
 
+create_secret_from_literal() {
+   local name="${1}"
+   local literal="${2}"
+
+   kubectl create configmap "${name}" \
+     --from-literal="${literal}"
+}
+
 main() {
+  local redis_host
   local sql_ip_address
   local sql_password
   local secret_key_base
   local secret_key
 
+  redis_host="$(terraform output redis_host)"
   sql_ip_address="$(terraform output sql_ip_address)"
   sql_password="$(terraform output sql_password)"
 
@@ -39,6 +49,8 @@ main() {
       "SECRET_KEY_BASE=${secret_key_base}"
   done
 
+  create_configmap_from_literal lofocats-ui-redis-url \
+    "REDIS_URL=redis://${redis_host}/0"
   create_secret_from_literal lofocats-api-database-url \
     "DATABASE_URL=postgres://lofocats:${sql_password}@${sql_ip_address}/lofocats?pool=5&timeout=5000"
 }

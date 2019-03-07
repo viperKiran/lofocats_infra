@@ -8,6 +8,7 @@ A customer needs an infrastructure to run their new Web application composed of 
 
 * `ui`: [iridakos/lofocats_api](https://github.com/iridakos/lofocats_api)
 * `api`: [iridakos/lofocats_api](https://github.com/iridakos/lofocats_api)
+* `cache`: [Redis](https://redis.io)
 * `db`: [PostgreSQL](https://www.postgresql.org)
 * `metrics`: [Prometheus](https://prometheus.io)
 
@@ -18,6 +19,7 @@ A customer needs an infrastructure to run their new Web application composed of 
 * [Terraform](http://terraform.io) will be used to maintain the infrastructure as code
 * The containers will be orchestrated by [Kubernetes](https://kubernetes.io) aka K8s
 * A relational database service will be used for PostgreSQL to avoid dealing the hassles of managing it ourselves (e.g. K8s and stateful apps, upgrades, backups, high availability...).
+* [Google Memorystore](https://cloud.google.com/memorystore/) will be used for Redis for similar reasons to RDS.
 * A managed Kubernetes service to avoid dealing with bootstrapping a cluster and maintaining it ourselves.
 * [Google Cloud Platform](https://cloud.google.com/) aka GCP will be used as Cloud provider because they offer:
   * a RDS for PostgreSQL: [Cloud SQL](https://cloud.google.com/sql/)

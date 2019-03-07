@@ -10,6 +10,10 @@ output "endpoint" {
   value = "${module.endpoint-dns.endpoint}"
 }
 
+output "redis_host" {
+  value ="${google_redis_instance.cache.host}"
+}
+
 output "sql_ip_address" {
   value = "${google_sql_database_instance.primary.first_ip_address}"
 }

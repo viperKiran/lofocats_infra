@@ -29,6 +29,8 @@ spec:
         - name: RAILS_ENV
           value: production
         envFrom:
+        - configMapRef:
+            name: lofocats-ui-redis-url
         - secretRef:
             name: lofocats-ui-secret-key
         ports:
