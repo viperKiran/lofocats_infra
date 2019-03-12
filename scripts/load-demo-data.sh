@@ -26,5 +26,8 @@ spec:
         envFrom:
         - secretRef:
             name: lofocats-api-database-url
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsUser: 2  # non-root user
       restartPolicy: OnFailure
 EOF
