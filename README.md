@@ -83,7 +83,7 @@ Note: the demo is only a partial implementation of the design.
   https://cloud.google.com/sdk
 * Ensure you have the `kubectl` command-line tool installed and configured:
   https://kubernetes.io/docs/tasks/tools/install-kubectl/
-* Ensure you have `terraform` version 0.11 or superior installed:
+* Ensure you have `terraform` version 0.12 or superior installed:
   https://learn.hashicorp.com/terraform/getting-started/install.html
 * You can choose your region by exporting `GOOGLE_REGION` (default: `us-central1`)
 

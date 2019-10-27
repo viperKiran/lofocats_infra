@@ -4,9 +4,9 @@ resource "google_project_service" "container_api" {
 
 resource "google_container_cluster" "primary" {
   name       = "lofocats-cluster"
-  location   = "${data.google_compute_zones.available.names[0]}"
-  network    = "${google_compute_network.network.self_link}"
-  subnetwork = "${google_compute_subnetwork.subnet-gke.self_link}"
+  location   = data.google_compute_zones.available.names[0]
+  network    = google_compute_network.network.self_link
+  subnetwork = google_compute_subnetwork.subnet-gke.self_link
 
   # We can't create a cluster with no node pool defined, but we want to only use
   # separately managed node pools. So we create the smallest possible default
@@ -25,30 +25,30 @@ resource "google_container_cluster" "primary" {
   # or if the VPN in inside GCP,
   # route the VPN internally
   # and remove the master's external endpoint
-  master_authorized_networks_config = [{
-    cidr_blocks = {
+  master_authorized_networks_config {
+    cidr_blocks {
       cidr_block   = "0.0.0.0/0"
       display_name = "all"
     }
-  }]
-
-  ip_allocation_policy = {
-    cluster_secondary_range_name  = "${google_compute_subnetwork.subnet-gke.secondary_ip_range.0.range_name}"
-    services_secondary_range_name = "${google_compute_subnetwork.subnet-gke.secondary_ip_range.1.range_name}"
   }
 
-  private_cluster_config = {
+  ip_allocation_policy {
+    cluster_secondary_range_name  = google_compute_subnetwork.subnet-gke.secondary_ip_range[0].range_name
+    services_secondary_range_name = google_compute_subnetwork.subnet-gke.secondary_ip_range[1].range_name
+  }
+
+  private_cluster_config {
     enable_private_nodes   = true
     master_ipv4_cidr_block = "10.99.0.0/28"
   }
 
-  depends_on = ["google_project_service.container_api"]
+  depends_on = [google_project_service.container_api]
 }
 
 resource "google_container_node_pool" "primary" {
   name       = "lofacats-node-pool"
-  location   = "${data.google_compute_zones.available.names[0]}"
-  cluster    = "${google_container_cluster.primary.name}"
+  location   = data.google_compute_zones.available.names[0]
+  cluster    = google_container_cluster.primary.name
   node_count = 2
 
   node_config {

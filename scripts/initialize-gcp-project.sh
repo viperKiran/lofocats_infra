@@ -71,7 +71,7 @@ main() {
   cat > "${ROOT_DIR}/backend_override.tf" <<EOF
 terraform {
   backend "gcs" {
-     bucket  = "${GOOGLE_PROJECT}-tf-state"
+    bucket = "${GOOGLE_PROJECT}-tf-state"
   }
 }
 EOF
