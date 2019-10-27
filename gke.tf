@@ -4,7 +4,7 @@ resource "google_project_service" "container_api" {
 
 resource "google_container_cluster" "primary" {
   name       = "lofocats-cluster"
-  zone       = "${data.google_compute_zones.available.names[0]}"
+  location   = "${data.google_compute_zones.available.names[0]}"
   network    = "${google_compute_network.network.self_link}"
   subnetwork = "${google_compute_subnetwork.subnet-gke.self_link}"
 
@@ -47,7 +47,7 @@ resource "google_container_cluster" "primary" {
 
 resource "google_container_node_pool" "primary" {
   name       = "lofacats-node-pool"
-  zone       = "${data.google_compute_zones.available.names[0]}"
+  location   = "${data.google_compute_zones.available.names[0]}"
   cluster    = "${google_container_cluster.primary.name}"
   node_count = 2
 
