@@ -68,7 +68,7 @@ resource "google_compute_global_address" "public" {
 
 module "endpoint-dns" {
   source      = "terraform-google-modules/endpoints-dns/google"
-  version     = "1.0.1"
+  version     = "1.1.0"
   project     = "${data.google_client_config.current.project}"
   name        = "lofocats"
   external_ip = "${google_compute_global_address.public.address}"
